@@ -2,6 +2,7 @@
 $:.push File.expand_path("../lib", __FILE__)
 require "fbrails/version"
 
+
 Gem::Specification.new do |s|
   s.name        = "fbrails"
   s.version     = Fbrails::VERSION
