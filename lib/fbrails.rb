@@ -29,12 +29,16 @@ end
     end 
     
     def self.token_valid?(token,expires = false)
-      if expires != false && expires != nil && expires < Time.new
+      if expires.class = Time && expires < Time.new
         return false
       end
 
       url = "https://graph.facebook.com/me/?access_token=#{token}"
-      result = Fbrails.get(url)
+      begin
+        result = Fbrails.get(url)
+      rescue
+        return false
+      end
       if result == false
         return false
       elsif result.has_key?("id")
