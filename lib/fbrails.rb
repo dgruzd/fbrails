@@ -3,6 +3,9 @@ require 'net/https'
 require 'json'
 module Fbrails
 
+class FailedToGet < StandardError
+end
+
 
   class Auth 
     def initialize(app_id, secret, app_url)
@@ -13,9 +16,11 @@ module Fbrails
   
     def token(code)
       url = "https://graph.facebook.com/oauth/access_token?client_id=#{@app_id}&redirect_uri=#{@app_url}&client_secret=#{@secret}&code=#{code}"
-      resp = self.get(url)
+      resp = Fbrails.get(url,true)
       if resp.include?("access_token=")
-        token = resp.body.gsub(/access_token=/, "").gsub(/&expires=\d+/,"")
+	expires = resp.scan(/\d+/).last
+        token = resp.gsub(/access_token=/, "").gsub(/&expires=\d+/,"")
+	Fbrails::Graph.new(token,expires)
       else
         nil
       end
@@ -31,12 +36,17 @@ module Fbrails
 end
 
   class Graph
-    def initialize(token)
+    def initialize(token,expires)
       @token = token
+      @expire_time = Time.new += expires
     end
 
 
     def token_valid?
+      if @expire_time < Time.new
+        return false
+      end
+
       url = "https://graph.facebook.com/me/?access_token=#{@token}"
       result = Fbrails.get(url)
       if result == false
@@ -56,16 +66,20 @@ end
   end
   
   
-  def self.get(url)
+  def self.get(url,raw = false)
     uri = URI.parse(url)
     http = Net::HTTP.new(uri.host,uri.port)
     http.use_ssl = true
     http.verify_mode = OpenSSL::SSL::VERIFY_NONE
     request = Net::HTTP::Get.new(uri.request_uri)
     resp = http.request(request)
+    if raw
+      return resp.body
+    end
+
     result = JSON.parse(resp.body)
     if result.has_key?("error")
-      return false
+      raise FailedToGet, "Failed to get, probably token expired"
     else
       return result
     end
