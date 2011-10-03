@@ -18,13 +18,32 @@ end
       url = "https://graph.facebook.com/oauth/access_token?client_id=#{@app_id}&redirect_uri=#{@app_url}&client_secret=#{@secret}&code=#{code}"
       resp = Fbrails.get(url,true)
       if resp.include?("access_token=")
-	expires = resp.scan(/\d+/).last
-        token = resp.gsub(/access_token=/, "").gsub(/&expires=\d+/,"")
-	Fbrails::Graph.new(token,expires)
+        hash = Hash.new
+        expire = resp.scan(/\d+/).last.to_i 
+        hash[:expires] = Time.new + expire 
+        hash[:token] = resp.gsub(/access_token=/, "").gsub(/&expires=\d+/,"")
+        return hash
       else
         nil
       end
     end 
+    
+    def self.token_valid?(token,expires)
+      if expires < Time.new
+        return false
+      end
+
+      url = "https://graph.facebook.com/me/?access_token=#{token}"
+      result = Fbrails.get(url)
+      if result == false
+        return false
+      elsif result.has_key?("id")
+        return true
+      else
+        return nil
+      end
+        
+    end
 
     def redirect_url
       if !@app_id.blank? && !@app_url.blank?
@@ -36,28 +55,11 @@ end
 end
 
   class Graph
-    def initialize(token,expires)
+    def initialize(token)
       @token = token
-      @expire_time = Time.new += expires
     end
 
 
-    def token_valid?
-      if @expire_time < Time.new
-        return false
-      end
-
-      url = "https://graph.facebook.com/me/?access_token=#{@token}"
-      result = Fbrails.get(url)
-      if result == false
-        return false
-      elsif result.has_key?("id")
-        return true
-      else
-        return nil
-      end
-        
-    end
 
     def me
       url = "https://graph.facebook.com/me/?access_token=#{@token}"
