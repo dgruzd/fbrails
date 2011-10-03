@@ -29,7 +29,7 @@ end
     end 
     
     def self.token_valid?(token,expires = false)
-      if expires.class = Time && expires < Time.new
+      if expires.class == Time && expires < Time.new
         return false
       end
 
