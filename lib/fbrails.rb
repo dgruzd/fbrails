@@ -28,8 +28,8 @@ end
       end
     end 
     
-    def self.token_valid?(token,expires)
-      if expires < Time.new
+    def self.token_valid?(token,expires = false)
+      if expires != false && expires < Time.new
         return false
       end
 
