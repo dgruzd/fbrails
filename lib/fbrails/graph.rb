@@ -4,8 +4,8 @@ module Fbrails
       @token = token
     end
 
-    def get_object(obj)
-      url = "https://graph.facebook.com/#{obj}/?access_token=#{@token}"
+    def get_object(obj = "")
+      url = "https://graph.facebook.com/me/#{obj}?access_token=#{@token}"
       Fbrails.get(url)
     end
 
