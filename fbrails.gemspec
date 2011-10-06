@@ -6,7 +6,7 @@ require "fbrails/version"
 Gem::Specification.new do |s|
   s.name        = "fbrails"
   s.version     = Fbrails::VERSION
-  s.authors     = ["Dmitry Gruzd", "Vitaly Mineev"]
+  s.authors     = ["Dmitry Gruzd", "Vitaly Mineev", "Ivan Shamatov"]
   s.email       = ["donotsendhere@gmail.com"]
   s.homepage    = ""
   s.summary     = %q{Small gem for auth & getting info from facebook}

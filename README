@@ -17,6 +17,6 @@ Fbrails::Auth.token_valid?(token,expire_time) # return true of false
 
 
 
-@graph = Fbrails::Graph.new(token)
+graph = Fbrails::Graph.new(token)
 
-@graph.me # return hash with your info or false
+graph.me # return hash with your info or false
