@@ -26,6 +26,10 @@ def self.get(url,raw = false)
     end
 end
 
+def self.put(url)
+  
+end
+
 require 'fbrails/auth'
 
 require 'fbrails/graph'

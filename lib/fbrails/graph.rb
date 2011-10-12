@@ -8,5 +8,7 @@ module Fbrails
       url = "https://graph.facebook.com/me/?access_token=#{@token}"
       Fbrails.get(url)
     end
+    
+        
   end
 end
