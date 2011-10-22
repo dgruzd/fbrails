@@ -10,8 +10,8 @@ end
   def get (url,raw = false)
       uri = URI.parse(url)
       http = Net::HTTP.new(uri.host,uri.port)
-      http.use_ssl = true
-      http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+      http.use_ssl = true if url =~ /^https/
+      http.verify_mode = OpenSSL::SSL::VERIFY_NONE if url =~ /^https/
       request = Net::HTTP::Get.new(uri.request_uri)
       resp = http.request(request)
       if raw
