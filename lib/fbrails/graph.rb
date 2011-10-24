@@ -35,26 +35,9 @@ module Fbrails
 
     def call (method)
       url = method.to_s.split("_").join("/")
-      get(URL+url+access_token)
+      Fbrails.get(URL+url+access_token)
     end
     
-    def get (url,raw = false)
-      uri = URI.parse(url)
-      http = Net::HTTP.new(uri.host,uri.port)
-      http.use_ssl = true
-      http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-      request = Net::HTTP::Get.new(uri.request_uri)
-      resp = http.request(request)
-      if raw
-        return resp.body
-      end
-      result = JSON.parse(resp.body)
-      if result.has_key?("error")
-        raise FailedToGet, "Failed to get, probably token expired"
-      else
-        return result
-      end
-    end
     
   end
 end
