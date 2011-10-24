@@ -3,11 +3,11 @@ require 'net/https'
 require 'json'
 
 module Fbrails
-
 class FailedToGet < StandardError
 end
 
-  def get (url,raw = false)
+
+  def self.get (url,raw = false)
       uri = URI.parse(url)
       http = Net::HTTP.new(uri.host,uri.port)
       http.use_ssl = true if url =~ /^https/
