@@ -7,6 +7,28 @@ module Fbrails
       @token = token
     end
 
+
+
+    def friends
+      result = []
+      friends = Fbrails.get(URL+"me"+"/"+"friends"+access_token)
+      loop do
+        if friends.has_key?("paging") && friends["paging"].has_key?("next")
+          unless friends["data"].blank?
+            friends["data"].each do |fr|
+              fr["id"] = fr["id"].to_i
+              result << fr
+            end
+          end
+        else
+          return result
+        end
+      friends = Fbrails.get(friends["paging"]["next"])
+      end
+    end
+
+
+
     # def get_object(obj = "")
     #   url = "https://graph.facebook.com/me/#{obj}?access_token=#{@token}"
     #   Fbrails.get(url)
