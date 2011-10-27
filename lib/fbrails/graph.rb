@@ -8,8 +8,7 @@ module Fbrails
     end
 
 
-
-    def friends
+    def friends(ids=false)
       result = []
       friends = Fbrails.get(URL+"me"+"/"+"friends"+access_token)
       loop do
@@ -21,7 +20,15 @@ module Fbrails
             end
           end
         else
-          return result
+          if ids
+            coll = []
+            result.each do |fr|
+              coll << fr["id"]
+            end
+            return coll
+          else
+            return result
+          end
         end
       friends = Fbrails.get(friends["paging"]["next"])
       end
