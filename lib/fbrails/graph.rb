@@ -8,9 +8,18 @@ module Fbrails
     end
 
 
-    def friends(ids=false)
+    def friends(fields = false)
       result = []
-      friends = Fbrails.get(URL+"me"+"/"+"friends"+access_token)
+      if fields && fields.class == Array
+        params = "&fields=" + fields.join(",")
+      else
+        params = ""
+      end
+
+      friends = Fbrails.get(URL+"me"+"/"+"friends"+access_token+params)
+
+
+
       loop do
         if friends.has_key?("paging") && friends["paging"].has_key?("next")
           unless friends["data"].blank?
@@ -20,15 +29,7 @@ module Fbrails
             end
           end
         else
-          if ids
-            coll = []
-            result.each do |fr|
-              coll << fr["id"]
-            end
-            return coll
-          else
-            return result
-          end
+          return result
         end
       friends = Fbrails.get(friends["paging"]["next"])
       end
