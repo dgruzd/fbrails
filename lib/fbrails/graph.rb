@@ -1,6 +1,7 @@
 module Fbrails  
   class Graph
 
+
     URL = "https://graph.facebook.com/"
   
     def initialize(token)

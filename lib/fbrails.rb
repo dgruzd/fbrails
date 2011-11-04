@@ -9,6 +9,8 @@ module Fbrails
 
 class FailedToGet < StandardError
 end
+class TokenExpired < StandardError
+end
     def self.get (url,raw = false)
 #      uri = URI.parse(url)
 #      http = Net::HTTP.new(uri.host,uri.port)
@@ -22,10 +24,17 @@ end
     end
     result = JSON.parse(resp)
     if result.has_key?("error")
-      raise FailedToGet, "Failed to get, probably token expired"
+#if result["error"].has_key?("type") && result["error"]["type"] == "OAuthException"
+#        raise TokenExpired, "Token expired"
+#      else
+        raise FailedToGet, "Failed to get"
+#      end
     else
       return result
     end
+
+    rescue HTTPClient::BadResponseError
+      raise TokenExpired, "Token expired"
     end
 
   def self.put(url)
