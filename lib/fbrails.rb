@@ -37,8 +37,12 @@ end
       raise TokenExpired, "Token expired"
     end
 
-  def self.put(url)
-  
+  def self.put(url, data)
+#url = URI.parse(url)
+    begin
+      response = RestClient.put url, data, {:content_type => :json}
+    end
+      object = JSON.parse(response)
   end   
 
 
