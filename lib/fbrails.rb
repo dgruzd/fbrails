@@ -33,8 +33,8 @@ end
       return result
     end
 
-    rescue HTTPClient::BadResponseError
-      raise TokenExpired, "Token expired"
+    #rescue HTTPClient::BadResponseError
+    #  raise TokenExpired, "Token expired"
     end
 
   def self.put(url, data)

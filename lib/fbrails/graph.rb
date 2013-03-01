@@ -8,6 +8,9 @@ module Fbrails
       @token = token
     end
 
+    def get(url, params = '')
+      Fbrails.get(URL+url+access_token+params)
+    end
 
     def friends(fields = false)
       result = []
@@ -17,9 +20,7 @@ module Fbrails
         params = ""
       end
 
-      friends = Fbrails.get(URL+"me"+"/"+"friends"+access_token+params)
-
-
+      friends = get('me/friends', params)
 
       loop do
         if friends.has_key?("paging") && friends["paging"].has_key?("next")

@@ -6,9 +6,9 @@ module Fbrails
       @secret = secret
     end
 
-    def redirect_url
+    def redirect_url(*scope)
       if !@app_id.blank? && !@app_url.blank?
-        "https://www.facebook.com/dialog/oauth?client_id=#{@app_id}&redirect_uri=#{@app_url}"
+        "https://www.facebook.com/dialog/oauth?client_id=#{@app_id}&redirect_uri=#{@app_url}#{'&scope='+scope.join(',') unless scope.blank?}"
       else
         "" 
       end
